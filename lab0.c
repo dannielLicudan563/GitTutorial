@@ -6,10 +6,10 @@
 #include <string.h>
 #include <math.h>
 
-int* converter(char string[100]);
 char* charPrinter(int num);
 int binConvert(int num);
 char* parCounter(int num);
+void chrPrinter(int num);
 
 int main(int argc, char *argv[])
 {
@@ -21,35 +21,51 @@ int main(int argc, char *argv[])
     int power = 7;
     int result;
     char ascString[100][7];
-    char fString[100][8];
+    char fString[100][10];
     char resultChar;
-    //int m = 0;
-    //int n = 0;
+    int n = 0;
+    int o = 0;
+    int tNum = 0;
+    int nResult;
+    int spCtr = 1;
 
     memset(jString, 0, 100);
     memset(fString, 0, 100);
-    //fd = open(argv[1], O_RDONLY);
     fd = read(open(argv[1], O_RDONLY),jString, 100);
     jString[99] = '\0';
     close(fd);
-    //printf("jString: %s\n", jString);
 
-    //printf("fString[0]: %s\n", fString[0]);
-    //printf("fString[1]: %s\n", fString[1]);
-    //printf("fString[2]: %s\n", fString[2]);
-    //printf("fString[3]: %s\n", fString[3]);
+    for(int m = 0; m<100; m++)
+    {
+        fString[n][o] = jString[m];
+        o++;
 
-    //printf("argc is: %d\n", argc);
+        if(jString[m] == ' ')
+        {
+            fString[n][o] = '\0';
+            n++;
+            o = 0;
+            spCtr++;
+        }
 
-    //for function to get all the arguments and move them to a string array
+    }
+
     for(int x = 0; x < argc; x++)
     {
         strcpy(string[x], argv[x]);
-        //printf("argv[%d] is: %s\n",x ,string[x]);
     }
 
-    //printf("string[1]: %s\n", string[1]);
-    //printf("string[2]: %s\n", string[2]);
+    if(string[1][0] == '-')
+    {
+        printf("Not Acceptable");
+        return 0;
+    }
+    else if(argc < 2)
+    {
+        printf("Not Acceptable");
+        return 0;
+    }
+
     printf("Original\t ASCII\t\t Decimal\t Parity\t\n");
     printf("--------\t --------\t --------\t --------\t\n");
 
@@ -60,29 +76,47 @@ int main(int argc, char *argv[])
         num = atoi(string[a]);
         result = binConvert(num);
 
-
-
         if(result <= 32 || result == 127)
         {
-            strcpy(ascString[a], charPrinter(result));
             printf("%s\t\t%s\t\t%d\t\t%s\n",string[a], charPrinter(result), result, parCounter(num));
         }
         else
         {
-            resultChar = '0' + result;
             printf("%s\t\t%c\t\t%d\t\t%s\n",string[a], result, result, parCounter(num));
         }
         num = 0;
         result =0;
     }
 
+    if(spCtr > 1)
+    {
+        for(int t = 0; t< spCtr; t++)
+        {
+            tNum = atoi(fString[t]);
+            nResult = binConvert(tNum);
+            if(nResult <= 32 || nResult == 127)
+            {
+                printf("%s\t\t%s\t\t%d\t\t%s\n",fString[t], charPrinter(nResult), nResult, parCounter(tNum));
+            }
+            else
+            {
+                printf("%s\t\t",fString[t]);
+                chrPrinter(nResult);
+                printf("\t\t%d\t\t%s\n", nResult, parCounter(tNum));
+            }
+            tNum = 0;
+            nResult =0;
+            }
+    }
+
 
     return 0;
 }
 
-int* converter(char string[100])
+void chrPrinter(int num)
 {
-
+    char c = num;
+    printf("%c", num);
 }
 
 char* charPrinter(int num)
@@ -97,7 +131,6 @@ char* charPrinter(int num)
                                   "LF", "VT", "FF", "CR", "SO", "SI", "DLE", "DC1", "DC2", "DC3",
                                   "DC4", "NAK","SYN", "ETB", "CAN", "EM", "SUB", "ESC", "FS", "GS",
                                   "RS", "US", "SPACE", "DEL"};
-
 
    return chString[num];
 }
